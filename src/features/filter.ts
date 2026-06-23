@@ -15,8 +15,8 @@ type SetFilterStatus = {
   value: string;
 };
 
-const setStatus = (value: FilterStatusType): SetFilterQuery => ({
-  type: 'filter/query',
+const setStatus = (value: FilterStatusType): SetFilterStatus => ({
+  type: 'filter/status',
   value,
 });
 

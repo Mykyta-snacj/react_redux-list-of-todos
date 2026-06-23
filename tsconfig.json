@@ -3,7 +3,6 @@
   "include": ["src"],
   "compilerOptions": {
     "sourceMap": false,
-    "types": ["node", "cypress"],
-    "moduleResolution": "node"
+    "types": ["node", "cypress"]
   }
 }

@@ -1,11 +1,12 @@
 import { combineReducers, createStore } from 'redux';
-// import { composeWithDevTools } from '@redux-devtools/extension';
 import todos from '../features/todos';
 import filter from '../features/filter';
+import currentTodo from '../features/currentTodo';
 
 const reducer = combineReducers({
   todos,
   filter,
+  currentTodo,
 });
 
 const store = createStore(reducer);

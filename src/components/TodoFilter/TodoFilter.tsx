@@ -1,7 +1,12 @@
+//react
 import React from 'react';
+
+//hooks
 import { useDispatch } from 'react-redux';
-import { actions, FilterStatusType } from '../../features/filter';
 import { useAppSelector } from '../../hooks';
+
+//store
+import { actions, FilterStatusType } from '../../features/filter';
 
 export const TodoFilter: React.FC = () => {
   const filter = useAppSelector(state => state.filter);
@@ -34,6 +39,8 @@ export const TodoFilter: React.FC = () => {
           type="text"
           className="input"
           placeholder="Search..."
+          value={filter.query}
+          onChange={e => dispatch(actions.setQuery(e.target.value))}
         />
         <span className="icon is-left">
           <i className="fas fa-magnifying-glass" />
@@ -45,6 +52,7 @@ export const TodoFilter: React.FC = () => {
             data-cy="clearSearchButton"
             type="button"
             className="delete"
+            onClick={() => dispatch(actions.setQuery(''))}
           />
         </span>
       </p>

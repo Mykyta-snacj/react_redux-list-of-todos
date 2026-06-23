@@ -1,6 +1,6 @@
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
-import { TodoFilter, TodoList } from './components';
+import { TodoFilter, TodoList, TodoModal } from './components';
 
 export const App = () => (
   <>
@@ -21,6 +21,6 @@ export const App = () => (
       </div>
     </div>
 
-    {/* <TodoModal /> */}
+    <TodoModal />
   </>
 );
