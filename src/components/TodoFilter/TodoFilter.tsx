@@ -1,6 +1,12 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { actions, FilterStatusType } from '../../features/filter';
+import { useAppSelector } from '../../hooks';
 
 export const TodoFilter: React.FC = () => {
+  const filter = useAppSelector(state => state.filter);
+  const dispatch = useDispatch();
+
   return (
     <form
       className="field has-addons"
@@ -8,7 +14,13 @@ export const TodoFilter: React.FC = () => {
     >
       <p className="control">
         <span className="select">
-          <select data-cy="statusSelect">
+          <select
+            data-cy="statusSelect"
+            value={filter.status}
+            onChange={e =>
+              dispatch(actions.setStatus(e.target.value as FilterStatusType))
+            }
+          >
             <option value="all">All</option>
             <option value="active">Active</option>
             <option value="completed">Completed</option>
