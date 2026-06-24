@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 //hooks
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../hooks';
 
@@ -15,7 +15,11 @@ import { actions as currentTodoActions } from '../../features/currentTodo';
 //services
 import classNames from 'classnames';
 
+//components
+import { Loader } from '../Loader';
+
 export const TodoList: React.FC = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const todos = useAppSelector(state => state.todos);
   const filter = useAppSelector(state => state.filter);
   const dispatch = useDispatch();
@@ -23,11 +27,17 @@ export const TodoList: React.FC = () => {
   useEffect(() => {
     const loadTodos = async () => {
       try {
+        setIsLoading(true);
+
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
         const data = await getTodos();
 
         dispatch(todosActions.set(data));
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -49,62 +59,69 @@ export const TodoList: React.FC = () => {
 
   return (
     <>
-      {filteredTodos.length <= 0 ? (
-        <p className="notification is-warning">
-          There are no todos matching current filter criteria
-        </p>
+      {isLoading ? (
+        <Loader />
       ) : (
-        <table className="table is-narrow is-fullwidth">
-          <thead>
-            <tr>
-              <th>#</th>
+        <>
+          {filteredTodos.length <= 0 && (
+            <p className="notification is-warning">
+              There are no todos matching current filter criteria
+            </p>
+          )}
+          {filteredTodos.length > 0 && (
+            <table className="table is-narrow is-fullwidth">
+              <thead>
+                <tr>
+                  <th>#</th>
 
-              <th>
-                <span className="icon">
-                  <i className="fas fa-check" />
-                </span>
-              </th>
+                  <th>
+                    <span className="icon">
+                      <i className="fas fa-check" />
+                    </span>
+                  </th>
 
-              <th>Title</th>
-              <th> </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {filteredTodos.map(todo => {
-              return (
-                <tr data-cy="todo" key={todo.id}>
-                  <td className="is-vcentered">{todo.id}</td>
-                  <td className="is-vcentered"> </td>
-
-                  <td className="is-vcentered is-expanded">
-                    <p
-                      className={classNames(
-                        { 'has-text-success': todo.completed },
-                        { 'has-text-danger': !todo.completed },
-                      )}
-                    >
-                      {todo.title}
-                    </p>
-                  </td>
-
-                  <td className="has-text-right is-vcentered">
-                    <button
-                      data-cy="selectButton"
-                      className="button"
-                      type="button"
-                      onClick={() => dispatch(currentTodoActions.set(todo))}
-                    >
-                      <span className="icon">
-                        <i className="far fa-eye" />
-                      </span>
-                    </button>
-                  </td>
+                  <th>Title</th>
+                  <th> </th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              </thead>
+
+              <tbody>
+                {filteredTodos.map(todo => {
+                  return (
+                    <tr data-cy="todo" key={todo.id}>
+                      <td className="is-vcentered">{todo.id}</td>
+                      <td className="is-vcentered"> </td>
+
+                      <td className="is-vcentered is-expanded">
+                        <p
+                          className={classNames(
+                            { 'has-text-success': todo.completed },
+                            { 'has-text-danger': !todo.completed },
+                          )}
+                        >
+                          {todo.title}
+                        </p>
+                      </td>
+
+                      <td className="has-text-right is-vcentered">
+                        <button
+                          data-cy="selectButton"
+                          className="button"
+                          type="button"
+                          onClick={() => dispatch(currentTodoActions.set(todo))}
+                        >
+                          <span className="icon">
+                            <i className="far fa-eye" />
+                          </span>
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+        </>
       )}
     </>
   );
